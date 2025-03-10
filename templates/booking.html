@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Session - Mentorship Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Mentorship Platform</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('marketplace') }}">Find Mentors</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="form-container">
+            <h2>Book a Session with {{ profile['full_name'] }}</h2>
+            
+            <div class="booking-details">
+                <p><strong>Mentor:</strong> {{ profile['full_name'] }}</p>
+                <p><strong>Expertise:</strong> {{ profile['expertise'] }}</p>
+            </div>
+            
+            <form action="{{ url_for('book_session', mentor_id=mentor.id) }}" method="post">
+                <div class="form-group">
+                    <label for="booking_date">Select Date and Time</label>
+                    <input type="datetime-local" id="booking_date" name="booking_date" required>
+                </div>
+                
+                <button type="submit" class="btn primary">Book Session</button>
+            </form>
+            
+            <p class="form-footer">
+                <a href="{{ url_for('mentor_profile', mentor_id=mentor.id) }}">Back to Mentor Profile</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mentorship Platform</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Mentorship Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Mentorship Platform</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('marketplace') }}">Find Mentors</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="dashboard">
+            <h2>Welcome, {{ user.username }}!</h2>
+            <p>You are logged in as a {{ user.role }}.</p>
+            
+            {% if user.role == 'mentor' %}
+                <div class="dashboard-section">
+                    <h3>Your Mentor Profile</h3>
+                    {% if profile %}
+                        <div class="profile-summary">
+                            <p><strong>Name:</strong> {{ profile['full_name'] }}</p>
+                            <p><strong>Expertise:</strong> {{ profile['expertise'] }}</p>
+                            <p><strong>Bio:</strong> {{ profile['bio'] }}</p>
+                            <a href="{{ url_for('create_profile') }}" class="btn secondary">Edit Profile</a>
+                        </div>
+                    {% else %}
+                        <p>You haven't created your mentor profile yet.</p>
+                        <a href="{{ url_for('create_profile') }}" class="btn primary">Create Profile</a>
+                    {% endif %}
+                </div>
+                
+                <div class="dashboard-section">
+                    <h3>Your Upcoming Sessions</h3>
+                    {% if bookings %}
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Mentee</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                    <tr>
+                                        <td>{{ booking['booking_date'] }}</td>
+                                        <td>{{ booking['mentee_name'] }}</td>
+                                        <td>{{ booking['status'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You don't have any upcoming sessions.</p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="dashboard-section">
+                    <h3>Your Booked Sessions</h3>
+                    {% if bookings %}
+                        <table class="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Mentor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                    <tr>
+                                        <td>{{ booking['booking_date'] }}</td>
+                                        <td>{{ booking['mentor_full_name'] }}</td>
+                                        <td>{{ booking['status'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p>You don't have any booked sessions.</p>
+                        <a href="{{ url_for('marketplace') }}" class="btn primary">Find a Mentor</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mentorship Platform</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
